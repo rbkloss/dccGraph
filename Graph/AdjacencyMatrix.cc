@@ -102,6 +102,9 @@ namespace graph {
 		}
 	}
 
+std::string AdjacencyMatrix::toString(){
+  return {};
+}
 
 
 }

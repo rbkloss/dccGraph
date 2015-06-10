@@ -119,4 +119,9 @@ namespace graph {
 
 		}
 	}
+
+std::string AdjacencyList::toString(){
+
+  return {};
+}
 }
