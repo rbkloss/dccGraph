@@ -17,18 +17,19 @@ bool VectorQueue::pop(std::pair<size_t, float>& minValue) {
     }
   }
   minValue = static_cast<std::pair<size_t, float>>(*min);
-  queue_.erase(min);  
+  queue_.erase(min);
   return true;
 }
 
 void VectorQueue::update(std::pair<unsigned, float> newValue) {
-  for (auto &value : queue_) {
-    auto it = queue_.find(newValue.first);
-    if (it != queue_.end()) {
-      if (newValue.first == value.first) {
-        queue_[newValue.first] = newValue.second;
-        break;
-      }
+  auto it = queue_.begin();
+  for (; it != queue_.end(); ++it) {
+    if (it->first == newValue.first)
+      break;
+  }
+  if (it != queue_.end()) {
+    if (newValue.first <= it->first) {
+      queue_[newValue.first] = newValue.second;
     }
   }
 }

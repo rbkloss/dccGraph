@@ -4,7 +4,6 @@
 #include "Graph.h"
 
 class GraphGenerator{
-  
   public:
   static std::shared_ptr<graph::Graph> makeCompleteGraph(size_t n);
   static std::shared_ptr<graph::Graph> makeErdosGraph(size_t n, float oddsOfEdge, bool connected);

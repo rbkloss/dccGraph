@@ -13,7 +13,8 @@ namespace graph {
     delete queue_;
   }
 
-  std::map<size_t, size_t> Dijkstra::getMinPath(const std::shared_ptr<graph::Graph>& graph,
+  std::map<size_t, size_t> Dijkstra::getMinPath(
+    const std::shared_ptr<graph::Graph>& graph,
     const size_t source, std::map<size_t, float> &distances) {
     //generates the distance matrix
     std::map<size_t, size_t> predecessorsVector;
@@ -23,7 +24,7 @@ namespace graph {
     }
     distances[source] = 0;
     for (size_t i = 0; i < graph->getSize(); ++i) {
-      queue_->add(std::make_pair((i), distances[i]));
+      queue_->add(std::make_pair(i, distances[i]));
     }
     queue_->setup();
 
