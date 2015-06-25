@@ -2,13 +2,13 @@
 #define _DCCGRAPH_VECTOR_QUEUE_H_
 #include "PriorityQueue.h"
 #include <vector>
-#include <map>
+
 
 class VectorQueue : public PriorityQueue < size_t, float > {
 public:
   void setup() override{};
 private:
-  std::map<size_t, float> queue_;
+  std::vector<std::pair<size_t, float>> queue_;
   public:
   VectorQueue();
   ~VectorQueue();

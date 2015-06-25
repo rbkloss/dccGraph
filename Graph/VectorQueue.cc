@@ -4,7 +4,7 @@ VectorQueue::VectorQueue() {}
 VectorQueue::~VectorQueue() {}
 
 void VectorQueue::add(std::pair<unsigned, float> value) {
-  queue_[value.first] = value.second;
+  queue_.push_back(value);
 }
 
 bool VectorQueue::pop(std::pair<size_t, float>& minValue) {
@@ -29,7 +29,7 @@ void VectorQueue::update(std::pair<unsigned, float> newValue) {
   }
   if (it != queue_.end()) {
     if (newValue.first <= it->first) {
-      queue_[newValue.first] = newValue.second;
+      it->second = newValue.second;
     }
   }
 }
