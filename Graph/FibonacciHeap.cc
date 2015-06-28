@@ -1,5 +1,9 @@
 #include "FibonacciHeap.h"
 
+void FibonacciHeap::reserve(size_t n){
+    //sorry
+}
+
 FibonacciHeap::FibonacciHeap() {
   queue_ = new fibHeap();
 }
@@ -20,8 +24,10 @@ bool FibonacciHeap::pop(std::pair<unsigned, float>& minValue) {
 }
 
 void FibonacciHeap::update(std::pair<unsigned, float> newValue) {
+  
   auto it = handleMap_.find(newValue.first);
   if (it == handleMap_.end())return;
+  
   auto handle = handleMap_.find(newValue.first)->second;
   queue_->increase(handle, newValue);
 }

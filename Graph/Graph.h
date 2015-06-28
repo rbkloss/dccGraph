@@ -3,7 +3,6 @@
 
 #include <memory>
 #include <vector>
-#include <string>
 
 enum Representation { AdjacencyMatrix, AdjacencyList };
 
@@ -11,7 +10,8 @@ namespace graph {
 
    class Graph {
     public:
-		virtual size_t getSize() const = 0;
+		virtual std::pair<size_t, size_t> getSize() const = 0;//|V| |E|
+
 		
 		virtual void addNode(size_t id) = 0;
 		virtual void resize(size_t size) = 0;

@@ -39,6 +39,7 @@ class BinaryHeap : public PriorityQueue < size_t, float > {
   virtual void add(std::pair<unsigned, float> value) override;
   virtual bool pop(std::pair<unsigned, float>& minValue) override;
   virtual void update(std::pair<unsigned, float> newValue) override;
+  void reserve(size_t n) override;
 };
 
 

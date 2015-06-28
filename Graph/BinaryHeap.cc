@@ -37,3 +37,7 @@ void BinaryHeap::update(std::pair<unsigned, float> newValue) {
   auto handle = handleMap_.find(newValue.first)->second;
   queue_->increase(handle, newValue);
 }
+
+void BinaryHeap::reserve(size_t n){
+  queue_->reserve(n);
+}

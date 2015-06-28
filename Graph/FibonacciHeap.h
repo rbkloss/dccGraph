@@ -2,9 +2,8 @@
 #define _DCC_GRAPH_FIBONACCI_HEAP_H_
 
 #include "PriorityQueue.h"
-#include <map>
 #include <boost/heap/fibonacci_heap.hpp>
-
+#include <unordered_map>
 
 
 using boost::heap::fibonacci_heap;
@@ -20,10 +19,12 @@ typedef fibonacci_heap<Key, boost::heap::compare<FibonacciCompare>> fibHeap;
 
 
 class FibonacciHeap : public PriorityQueue < size_t, float > {
-  public:
+public:
+  void reserve(size_t n) override;
+public:
   fibHeap *queue_;
-  std::map < size_t,
-    fibHeap::handle_type >
+  std::unordered_map< size_t,
+                      fibHeap::handle_type >
     handleMap_;
 
   FibonacciHeap();

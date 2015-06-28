@@ -9,7 +9,6 @@
 
 #include <algorithm>
 #include <string>
-#include <iostream>
 #include <sstream>
 #include <fstream>
 
@@ -21,8 +20,8 @@ namespace graph {
 
 	AdjacencyList::~AdjacencyList() {}
 
-	size_t AdjacencyList::getSize()const {
-		return list_.size();
+  std::pair<size_t, size_t> AdjacencyList::getSize()const {
+		return std::make_pair(list_.size(), nEdges);
 	}
 
 	void AdjacencyList::resize(size_t size) {
@@ -32,6 +31,9 @@ namespace graph {
 	void AdjacencyList::addEdge(size_t viId, size_t vjId, float weight) {
 		//TODO: node existance verification
 		list_[viId].push_back(std::pair<int, float>(vjId, weight));
+    if (!hasEdge(vjId, viId)){
+      ++nEdges;
+    }
 	}
 
 	void AdjacencyList::addEdge(size_t viId, size_t vjId) {
@@ -57,14 +59,14 @@ namespace graph {
 	std::vector<size_t> AdjacencyList::getNeighbours(size_t v) const {
 		std::vector<size_t> ans;
 		std::for_each(list_[v].begin(), list_[v].end(), [&ans](const std::pair<int, float> &p) {
-			ans.push_back((size_t)p.first);
+			ans.push_back(static_cast<size_t>(p.first));
 		});
 		return ans;
 	}
 
 	bool AdjacencyList::hasEdge(size_t vi, size_t vj) const {
 		for (size_t i = 0; i < list_[vi].size(); ++i) {
-			std::pair<int, float> el = (list_[vi][(int)i]);
+			std::pair<int, float> el = (list_[vi][static_cast<int>(i)]);
 			if (el.first == vj) return true;
 		}
 		return false;
@@ -105,7 +107,7 @@ namespace graph {
 	}
 
 	void AdjacencyList::convert(std::shared_ptr<Graph> g) {
-		auto size = g->getSize();
+		auto size = g->getSize().first;
 		auto ptr = this->shared_from_this();
 
 		for (size_t i = 0; i < size; ++i) {

@@ -7,13 +7,14 @@ namespace graph {
 
   class AdjacencyMatrix : public Graph, public std::enable_shared_from_this < AdjacencyMatrix > {
     std::vector<std::vector<float> > mat_;
+    size_t nEdges= 0;
     public:
     AdjacencyMatrix(size_t numberOfVertix);
     AdjacencyMatrix();
     AdjacencyMatrix(const AdjacencyMatrix& orig);
     virtual ~AdjacencyMatrix();
 
-    virtual size_t getSize() const override;
+    virtual std::pair<size_t, size_t> getSize() const override;
 
     virtual void resize(size_t size) override;
     virtual void addNode(size_t id) override;

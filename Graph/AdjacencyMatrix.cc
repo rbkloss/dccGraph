@@ -6,7 +6,6 @@
  */
 
 #include "AdjacencyMatrix.h"
-#include <iostream>
 #include <fstream>
 #include <algorithm>
 
@@ -17,21 +16,21 @@ namespace graph {
 	AdjacencyMatrix::AdjacencyMatrix(size_t numberOfVertix) {
 		mat_.resize(numberOfVertix);
 		for (size_t i = 0; i < mat_.size(); ++i)
-			mat_[(int)i].resize(numberOfVertix);
+			mat_[static_cast<int>(i)].resize(numberOfVertix);
 	}
 
 	AdjacencyMatrix::AdjacencyMatrix(const AdjacencyMatrix& orig) {}
 
 	AdjacencyMatrix::~AdjacencyMatrix() {}
 
-	size_t AdjacencyMatrix::getSize() const {
-		return mat_.size();
+  std::pair<size_t, size_t> AdjacencyMatrix::getSize() const {
+    return std::make_pair(mat_.size(), nEdges);
 	}
 
 	void AdjacencyMatrix::resize(size_t size) {
 		mat_.resize(size);
 		for (size_t i = 0; i < mat_.size(); ++i)
-			mat_[(int)i].resize(size);
+			mat_[static_cast<int>(i)].resize(size);
 	}
 
 	void AdjacencyMatrix::addEdge(size_t startNodeId, size_t endNodeId) {
@@ -40,6 +39,9 @@ namespace graph {
 
 	void AdjacencyMatrix::addEdge(size_t viId, size_t vjId, float weight) {
 		mat_[viId][vjId] = weight;
+    if (!hasEdge(vjId, viId)) {
+      ++nEdges;
+    }
 	}
 	float AdjacencyMatrix::getEdge(size_t i, size_t j) const {
 		return mat_[i][j];
@@ -51,7 +53,7 @@ namespace graph {
 		std::vector<size_t> ans;
 		auto size = mat_.size();
 		for (size_t i = 0; i < size; ++i) {
-			if ((mat_[v][(int)i] != 0))
+			if ((mat_[v][static_cast<int>(i)] != 0))
 				ans.push_back(i);
 		}
 		return ans;
@@ -69,9 +71,9 @@ namespace graph {
 		mat_.clear();
 		mat_.resize(size);
 		for (size_t i = 0; i < mat_.size(); ++i) {
-			mat_[(int)i].resize(size);
+			mat_[static_cast<int>(i)].resize(size);
 			for (size_t j = 0; j < mat_.size(); ++j) {
-				inpFile >> mat_[(int)i][(int)j];
+				inpFile >> mat_[static_cast<int>(i)][static_cast<int>(j)];
 			}
 		}
 		inpFile.close();
@@ -91,7 +93,7 @@ namespace graph {
 	}
 
 	void AdjacencyMatrix::convert(std::shared_ptr<Graph> g) {
-		auto size = g->getSize();
+		auto size = g->getSize().first;
 		resize(size);
 		auto ptr = this->shared_from_this();
 		for (size_t i = 0; i < size; ++i) {

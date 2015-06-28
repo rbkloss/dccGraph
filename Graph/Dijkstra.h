@@ -3,9 +3,8 @@
 
 #include "./PriorityQueue.h"
 #include "Graph.h"
-#include <algorithm>
-#include <map>
 #include "VectorQueue.h"
+#include <unordered_map>
 
 namespace graph {
   class Dijkstra {
@@ -13,8 +12,8 @@ namespace graph {
     public:
     explicit Dijkstra(PriorityQueue<size_t, float>* queue = new VectorQueue());
     virtual ~Dijkstra();
-    std::map<size_t, size_t> getMinPath(const std::shared_ptr<graph::Graph> &graph,
-      const size_t source, std::map<size_t, float> &distances);
+    std::unordered_map<size_t, size_t> getMinPath(const std::shared_ptr<graph::Graph> &graph,
+      const size_t source, std::unordered_map<size_t, float> &distances);
   };
 }
 #endif // _DCCGRAPH_DIJKSTRA_H_

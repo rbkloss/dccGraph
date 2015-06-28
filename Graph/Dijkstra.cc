@@ -1,29 +1,31 @@
 #include "Dijkstra.h"
+#include <algorithm>
 
 namespace graph {
   Dijkstra::Dijkstra(PriorityQueue<size_t, float>* queue) {
     if (queue == nullptr) {
-      queue_ = new VectorQueue();
-    } else {
-      queue_ = queue;
+      throw new std::exception("NullPtr Exception\n");
     }
+    queue_ = queue;
   }
 
   Dijkstra::~Dijkstra() {
     delete queue_;
+    queue_ = nullptr;
   }
 
-  std::map<size_t, size_t> Dijkstra::getMinPath(
+  std::unordered_map<size_t, size_t> Dijkstra::getMinPath(
     const std::shared_ptr<graph::Graph>& graph,
-    const size_t source, std::map<size_t, float> &distances) {
+    const size_t source, std::unordered_map<size_t, float> &distances) {
     //generates the distance matrix
-    std::map<size_t, size_t> predecessorsVector;
-    for (size_t i = 0; i < graph->getSize(); ++i) {
+    std::unordered_map<size_t, size_t> predecessorsVector;
+    for (size_t i = 0; i < graph->getSize().first; ++i) {
       distances[i] = FLT_MAX;
       predecessorsVector[i] = -1;
     }
     distances[source] = 0;
-    for (size_t i = 0; i < graph->getSize(); ++i) {
+    queue_->reserve(graph->getSize().first);
+    for (size_t i = 0; i < graph->getSize().first; ++i) {
       queue_->add(std::make_pair(i, distances[i]));
     }
     queue_->setup();
@@ -41,13 +43,10 @@ namespace graph {
       auto neighbours = graph->getNeighbours(currentNode);
       for (auto node : neighbours) {
         float edgeWeight = graph->getEdge(currentNode, node);
-        float weightToNode = 0.0f;
-        std::for_each(distances.begin(), distances.end(),
-          [&weightToNode, &currentNode](std::pair<size_t, float> el) {if (el.first == currentNode) weightToNode = el.second; });
-        float oldWeight = 0.0f;
-        std::for_each(distances.begin(), distances.end(),
-          [&oldWeight, &node](std::pair<size_t, float> el) {if (el.first == node) oldWeight = el.second; });
-        float newWeight = edgeWeight + weightToNode;
+        float weightToNode = distances[currentNode];
+        float newWeight = weightToNode + edgeWeight;
+
+        float oldWeight = distances[node];        
         if (newWeight < oldWeight) {
           //update
           queue_->update(std::make_pair((node), newWeight));
@@ -56,7 +55,7 @@ namespace graph {
         }
       }
       ++visited;
-    } while (visited < graph->getSize());
+    } while (visited < graph->getSize().first);
     return predecessorsVector;
   }
 }
