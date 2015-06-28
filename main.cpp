@@ -37,9 +37,9 @@ void run() {
   unsigned begin = 500;
   unsigned step = 1000;
 
-  //runExperiment(begin, N, step, "sparse/", 0.001f);
-  //runExperiment(begin, N, step, "dense/", 0.15f);
-  runExperiment(begin, N, step, "complete/");
+  runExperiment(begin, N, step, "sparse/3/", 0.001f);
+  runExperiment(begin, N, step, "dense/3/", 0.15f);
+  runExperiment(begin, N, step, "complete/3/");
 
 }
 
@@ -60,6 +60,22 @@ void runExperiment(unsigned from, unsigned to, unsigned step,
     }
     auto sz = myGraph1->getSize();
     printf("V=%u, E=%u\n\n", sz.first, sz.second);
+
+    workers_.push_back(std::thread([&timeLogVec, n, &myGraph1]() {
+
+      graph::Dijkstra dijkstraVec(new VectorQueue());
+      std::unordered_map <size_t, float > distMat1;
+      for (int i = 0; i < 1; ++i) {
+        auto begin = std::chrono::high_resolution_clock::now();
+        auto vecAns = dijkstraVec.getMinPath(myGraph1, 1, distMat1);
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed = end - begin;
+        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed);
+        timeLogVec << ms.count() << std::endl;
+        //assert(binAns == vecAns);
+        distMat1.clear();
+      }
+    }));
 
     workers_.push_back(std::thread([&timeLogBin, n, &myGraph1]() {
 
@@ -89,25 +105,6 @@ void runExperiment(unsigned from, unsigned to, unsigned step,
       //assert(binAns == vecAns);
       distMat1.clear();
     }));
-
-    workers_.push_back(std::thread([&timeLogVec, n, &myGraph1]() {
-
-      graph::Dijkstra dijkstraVec(new VectorQueue());
-      std::unordered_map <size_t, float > distMat1;
-      for (int i = 0; i < 1; ++i) {
-        auto begin = std::chrono::high_resolution_clock::now();
-        auto vecAns = dijkstraVec.getMinPath(myGraph1, 1, distMat1);
-        auto end = std::chrono::high_resolution_clock::now();
-        auto elapsed = end - begin;
-        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed);
-        timeLogVec << ms.count() << std::endl;
-        //assert(binAns == vecAns);
-        distMat1.clear();
-      }
-    }));
-
-
-   
 
     for (auto &thread : workers_) {
       thread.join();
@@ -143,34 +140,32 @@ bool test() {
 
   std::unordered_map<size_t, float> vecDistMat;
   auto vecAns = dijkstraVec.getMinPath(adjMat, 1, vecDistMat);
-  assert(vecDistMat == groundTruth);
-
   std::unordered_map<size_t, float> binDistMat;
   auto binAns = dijkstraBin.getMinPath(adjMat, 1, binDistMat);
-  assert(binDistMat == groundTruth);
-
   std::unordered_map<size_t, float> fibDistMat;
-  auto fibAns = dijkstraBin.getMinPath(adjMat, 1, fibDistMat);
-  assert(fibDistMat == groundTruth);
+  auto fibAns = dijkstraFib.getMinPath(adjMat, 1, fibDistMat);
 
   std::unordered_map<size_t, float> groundTruth2 = { { 0, 0 }, { 1, 1 }, { 2, 2 }, { 3, 1 } };
 
   auto adjMat2 = std::make_shared<graph::AdjacencyMatrix>();
-  adjMat->load("inpTest2.txt");
+  adjMat2->load("inpTest2.txt");
   graph::Dijkstra dijkstraVec2(new VectorQueue());
   graph::Dijkstra dijkstraFib2(new FibonacciHeap());
   graph::Dijkstra dijkstraBin2(new BinaryHeap());
 
   std::unordered_map<size_t, float> vecDistMat2;
-  auto vecAns2 = dijkstraVec.getMinPath(adjMat, 0, vecDistMat2);
-  assert(vecDistMat2 == groundTruth2);
-
+  auto vecAns2 = dijkstraVec2.getMinPath(adjMat2, 0, vecDistMat2);
   std::unordered_map<size_t, float> binDistMat2;
-  auto binAns2 = dijkstraBin.getMinPath(adjMat, 0, binDistMat2);
-  assert(binDistMat2 == groundTruth2);
-
+  auto binAns2 = dijkstraBin2.getMinPath(adjMat2, 0, binDistMat2);
   std::unordered_map<size_t, float> fibDistMat2;
-  auto fibAns2 = dijkstraBin.getMinPath(adjMat, 0, fibDistMat2);
+  auto fibAns2 = dijkstraFib2.getMinPath(adjMat2, 0, fibDistMat2);
+
+  assert(vecDistMat == groundTruth);
+  assert(binDistMat == groundTruth);
+  assert(fibDistMat == groundTruth);
+
+  assert(vecDistMat2 == groundTruth2);
+  assert(binDistMat2 == groundTruth2);
   assert(fibDistMat2 == groundTruth2);
 
   return true;

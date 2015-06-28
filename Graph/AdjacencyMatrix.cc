@@ -21,7 +21,9 @@ namespace graph {
 
 	AdjacencyMatrix::AdjacencyMatrix(const AdjacencyMatrix& orig) {}
 
-	AdjacencyMatrix::~AdjacencyMatrix() {}
+	AdjacencyMatrix::~AdjacencyMatrix(){
+	  
+	}
 
   std::pair<size_t, size_t> AdjacencyMatrix::getSize() const {
     return std::make_pair(mat_.size(), nEdges);

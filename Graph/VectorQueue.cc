@@ -1,11 +1,11 @@
 #include "VectorQueue.h"
 
-void VectorQueue::reserve(size_t n){
+void VectorQueue::reserve(size_t n) {
   queue_.reserve(n);
 }
 
 void VectorQueue::add(std::pair<unsigned, float> value) {
-  queue_.insert(value);
+  queue_.push_back(value);
 }
 
 bool VectorQueue::pop(std::pair<size_t, float>& minValue) {
@@ -17,11 +17,11 @@ bool VectorQueue::pop(std::pair<size_t, float>& minValue) {
       min = it;
     }
   }
-  minValue = static_cast<std::pair<size_t, float>>(*min);
-  queue_.erase(min);
+  minValue = (*min);
+  queue_[min->first] = std::make_pair(min->first, FLT_MAX);
   return true;
 }
 
 void VectorQueue::update(std::pair<unsigned, float> newValue) {
-  queue_[newValue.first] = newValue.second;
+  queue_[newValue.first] = newValue;
 }

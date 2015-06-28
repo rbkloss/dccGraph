@@ -2,10 +2,10 @@
 #define _DCCGRAPH_VECTOR_QUEUE_H_
 #include "PriorityQueue.h"
 #include <unordered_map>
-
+#include <vector>
 
 class VectorQueue : public PriorityQueue < size_t, float > {
-  std::unordered_map<size_t, float> queue_;
+  std::vector<std::pair<size_t, float>> queue_;
   public:
   VectorQueue() = default;
   ~VectorQueue() = default;
